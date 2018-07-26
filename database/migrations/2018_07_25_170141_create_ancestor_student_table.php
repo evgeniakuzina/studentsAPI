@@ -14,8 +14,8 @@ class CreateAncestorStudentTable extends Migration
     public function up()
     {
         Schema::create('ancestor_student', function (Blueprint $table) {
-            $table->integer('ancestor_id');
-            $table->integer('student_id');
+            $table->integer('ancestor_id')->onDelete('cascade');
+            $table->integer('student_id')->onDelete('cascade');
         });
     }
 

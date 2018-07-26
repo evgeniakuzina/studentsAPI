@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class StudentController extends ApiController
 {
@@ -64,10 +65,9 @@ class StudentController extends ApiController
      * @param  \App\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($student)
     {
-        
-        $result = Student::find($id);
+        $result = Student::find($student);
 
         if (!$result) {
             
@@ -98,7 +98,22 @@ class StudentController extends ApiController
      */
     public function update(Request $request, Student $student)
     {
-        //
+        try {
+            $this->validate( $validatedData = $request, [
+                    'name' => 'required|alpha',
+                    'surname' => 'required|alpha',
+                    'age' => 'required|numeric',
+                    'email' => 'email|unique:ancestors'
+            ]);
+  
+        } catch(\Exception $e) {
+
+            return $this->jsonError("Validation failed", 400);
+        }
+
+        $student->update($request->all());
+
+        return $this->jsonOK($student);
     }
 
     /**
@@ -109,6 +124,10 @@ class StudentController extends ApiController
      */
     public function destroy(Student $student)
     {
-        //
+        $student->ancestors()->detach();
+
+        $student->delete();
+
+        return $this->jsonOK($student['id']);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Ancestor;
 use App\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AncestorController extends ApiController
 {
@@ -41,15 +42,14 @@ class AncestorController extends ApiController
     {
 
         try {
-                  $validatedData = $this->validate($request, [
+            $this->validate($request, [
                     'name' => 'required|alpha',
                     'surname' => 'required|alpha',
                     'age' => 'required|numeric',
                     'email' => 'email|unique:ancestors'
-                ]);
+            ]);
   
-            }
-        catch(\Exception $e) {
+        } catch(\Exception $e) {
 
             return $this->jsonError("Validation failed", 400);
         }
@@ -97,23 +97,44 @@ class AncestorController extends ApiController
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Ancestor  $ancestor
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Ancestor $ancestor)
     {
-        //
+
+        try {
+            $this->validate( $validatedData = $request, [
+                    'name' => 'required|alpha',
+                    'surname' => 'required|alpha',
+                    'age' => 'required|numeric',
+                    'email' => 'email|unique:ancestors'
+            ]);
+  
+        } catch(\Exception $e) {
+
+            return $this->jsonError("Validation failed", 400);
+        }
+
+        $ancestor->update($request->all());
+
+        return $this->jsonOK($ancestor);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Ancestor  $ancestor
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Ancestor $ancestor)
     {
-        //
+
+        $ancestor->students()->detach();
+
+        $ancestor->delete();
+
+        return $this->jsonOK($ancestor['id']);
     }
 
     //Add a student to ancestor
