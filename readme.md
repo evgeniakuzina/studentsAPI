@@ -16,6 +16,8 @@ DELETE - 'ancestors/{ancestor}' - to delete ancestor with id {ancestor}.
 
 
 
+
+
 GET - 'students'- to receive the list of all students.
 
 GET - 'students/{student}' - to receive student with Id {student}.
