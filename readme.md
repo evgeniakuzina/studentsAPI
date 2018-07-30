@@ -14,9 +14,7 @@ PUT - 'ancestors/{ancestor}' - to update ancestor with id {ancestor}.
 
 DELETE - 'ancestors/{ancestor}' - to delete ancestor with id {ancestor}.
 
-
-
-
+///////////////////////////////////////////////////////////////////////
 
 GET - 'students'- to receive the list of all students.
 
